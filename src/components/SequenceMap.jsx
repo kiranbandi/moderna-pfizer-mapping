@@ -1,77 +1,69 @@
 import React, { Component } from 'react';
-import { COLOR_LIST, LABEL_WIDTH, OVERALL_WIDTH, ZOOM_SCALE } from '../utils/chartConstants';
+import { COLOR_LIST, TRACK_HEIGHT, CHARACTER_WIDTH } from '../utils/chartConstants';
 import { scaleLinear } from 'd3';
 import _ from 'lodash';
-
-var CHART_WIDTH = 25000;
-var TRACK_HEIGHT = 25;
 
 export default class SequenceMap extends Component {
 
     componentDidMount() {
 
-        const { sequence, width, seqID } = this.props, sequenceLength = sequence.length;
+        const { sequence, width, seqID } = this.props,
+            charactersPerSeq = Math.ceil(width / CHARACTER_WIDTH);
 
-        // let chartScale = scaleLinear()
-        //     .domain([0, sequenceLength - 1])
-        //     .range([0, width]);
+        // Split the sequence into N parts based on width in which content can be fit
+        const sequencesList = _.chunk(sequence, charactersPerSeq);
 
-        // let canvas = this['canvas-' + seqID];
+        // Create generic scale reused by all canvases
+        let chartScale = scaleLinear()
+            .domain([0, charactersPerSeq - 1])
+            .range([10, width - 10]);
 
-        // let context = canvas.getContext('2d');
-        // // Store the current transformation matrix
-        // context.save();
-        // // Use the identity matrix while clearing the canvas
-        // context.setTransform(1, 0, 0, 1, 0, 0);
-        // context.clearRect(0, 0, canvas.width, canvas.height);
-        // // Restore the transform
-        // context.restore();
+        _.map(sequencesList, (sequencePart, sequencePartID) => {
 
-        // context.lineWidth = TRACK_HEIGHT;
+            // Clear canvas first
+            let canvas = this['canvas-' + seqID + '-' + sequencePartID];
+            let context = canvas.getContext('2d');
+            // Store the current transformation matrix
+            context.save();
+            // Use the identity matrix while clearing the canvas
+            context.setTransform(1, 0, 0, 1, 0, 0);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            // Restore the transform
+            context.restore();
+            // Set a fixed linewidth
+            context.lineWidth = CHARACTER_WIDTH;
 
-        // _.map(pfizer, (nuc, lineIndex) => {
-        //     context.beginPath();
-        //     context.moveTo(Math.round(chartScale(lineIndex)), 0);
-        //     context.lineTo(Math.round(chartScale(lineIndex)), TRACK_HEIGHT);
+            _.map(sequencePart, (d, nucIndex) => {
+                context.beginPath();
+                context.moveTo(Math.round(chartScale(nucIndex)), 0);
+                context.lineTo(Math.round(chartScale(nucIndex)), TRACK_HEIGHT);
+                context.strokeStyle = COLOR_LIST[d.color];
+                context.stroke();
+            });
 
-        //     let color = COLOR_LIST[1];
-        //     if (nuc == 'G') {
-        //         color = COLOR_LIST[2];
-        //     }
-        //     else if (nuc == 'C') {
-        //         color = COLOR_LIST[3];
-        //     }
-        //     else if (nuc == 'U') {
-        //         color = COLOR_LIST[4];
-        //     }
-        //     context.strokeStyle = color;
-        //     context.stroke();
-        // });
-
-        // _.map(pfizer, (nuc, lineIndex) => {
-        //     context.textAlign = "center";
-        //     context.textBaseline = "middle";
-        //     // Add label for each line
-        //     context.beginPath();
-        //     context.font = "11px Arial";
-        //     context.fillStyle = 'white';
-        //     context.fillText(nuc, chartScale(lineIndex) - 2, TRACK_HEIGHT / 2);
-        // });
-
+            _.map(sequencePart, (d, nucIndex) => {
+                context.textAlign = "center";
+                context.textBaseline = "middle";
+                // Add label for each line
+                context.beginPath();
+                context.font = "11px Arial";
+                context.fillStyle = 'white';
+                context.fillText(d.text, chartScale(nucIndex), TRACK_HEIGHT / 2);
+            });
+        });
     }
 
     render() {
 
         const { sequence, seqID, title, width } = this.props,
-            // Width of each character in pixels
-            characterWidth = 15,
-            sequenceParts = (sequence.length * characterWidth) / width;
+            sequenceParts = Math.ceil((sequence.length * CHARACTER_WIDTH) / width);
 
         return (
-            <div className='canvas-wrapper m-a'>
+            <div className='canvas-wrapper'>
                 <h3>{title}</h3>
-                {_.times(sequenceParts, (d, i) => {
+                {_.map(_.times(sequenceParts), (d, i) => {
                     return <canvas className='sequence-canvas'
+                        key={'key-' + seqID + '-' + i}
                         width={width}
                         height={TRACK_HEIGHT}
                         ref={(el) => { this['canvas-' + seqID + '-' + i] = el }} />

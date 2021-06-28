@@ -1,14 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import { geneData } from '../utils/loadData';
-import { COLOR_LIST, LABEL_WIDTH, OVERALL_WIDTH, ZOOM_SCALE } from '../utils/chartConstants';
-import { scaleLinear } from 'd3';
+import { OVERALL_WIDTH } from '../utils/chartConstants';
 import _ from 'lodash';
 import SequenceMap from './SequenceMap';
 
-var CHART_WIDTH = 25000;
-var TRACK_HEIGHT = 25;
 var COLOR_MAP = {
     'A': 1,
     'G': 3,
@@ -18,7 +13,7 @@ var COLOR_MAP = {
     'false': 2
 };
 
-class Dashboard extends Component {
+export default class Dashboard extends Component {
 
     constructor(props) {
         super(props);
@@ -67,246 +62,100 @@ class Dashboard extends Component {
                 'text': modernaNuc
             });
 
-            // go forward and combine the current and next two nucleotides into once codon 
-            if (nucIndex % 3 == 0) {
-                let pfizerCodon = pfizerNuc + pfizer[nucIndex + 1] + pfizer[nucIndex + 2],
-                    modernaCodon = modernaNuc + moderna[nucIndex + 1] + moderna[nucIndex + 2];
-
-                sequenceMap.pfizerProt.push({
-                    'color': proteinMap[pfizerCodon] == proteinMap[modernaCodon],
-                    'text': proteinMap[pfizerCodon]
-                });
-
-                sequenceMap.modernaProt.push({
-                    'color': proteinMap[pfizerCodon] == proteinMap[modernaCodon],
-                    'text': proteinMap[modernaCodon]
-                });
-            }
         });
 
-        debugger;
+        let pfizerCodonList = _.chunk(pfizer.split(''), 3).map((d) => d.join('')),
+            modernaCodonList = _.chunk(moderna.split(''), 3).map((d) => d.join(''));
 
+        _.map(pfizerCodonList, (pfizerCodon, codonIndex) => {
 
-        // const markerCount = pfizer.length;
+            let modernaCodon = modernaCodonList[codonIndex],
+                pfizerProtein = proteinMap[pfizerCodon],
+                modernaProtein = proteinMap[modernaCodon];
 
-        // let chartScale = scaleLinear()
-        //     .domain([0, markerCount - 1])
-        //     .range([0, CHART_WIDTH]);
+            sequenceMap.pfizerProt.push({
+                'color': COLOR_MAP[pfizerProtein == modernaProtein],
+                'text': pfizerProtein
+            });
 
+            sequenceMap.modernaProt.push({
+                'color': COLOR_MAP[pfizerProtein == modernaProtein],
+                'text': modernaProtein
+            });
+        });
 
-        // let canvas = this['canvas-pfizer'];
-
-
-        // let context = canvas.getContext('2d');
-        // // Store the current transformation matrix
-        // context.save();
-        // // Use the identity matrix while clearing the canvas
-        // context.setTransform(1, 0, 0, 1, 0, 0);
-        // context.clearRect(0, 0, canvas.width, canvas.height);
-        // // Restore the transform
-        // context.restore();
-
-        // context.lineWidth = TRACK_HEIGHT;
-
-        // _.map(pfizer, (nuc, lineIndex) => {
-        //     context.beginPath();
-        //     context.moveTo(Math.round(chartScale(lineIndex)), 0);
-        //     context.lineTo(Math.round(chartScale(lineIndex)), TRACK_HEIGHT);
-
-        //     let color = COLOR_LIST[1];
-        //     if (nuc == 'G') {
-        //         color = COLOR_LIST[2];
-        //     }
-        //     else if (nuc == 'C') {
-        //         color = COLOR_LIST[3];
-        //     }
-        //     else if (nuc == 'U') {
-        //         color = COLOR_LIST[4];
-        //     }
-        //     context.strokeStyle = color;
-        //     context.stroke();
-        // });
-
-        // _.map(pfizer, (nuc, lineIndex) => {
-        //     context.textAlign = "center";
-        //     context.textBaseline = "middle";
-        //     // Add label for each line
-        //     context.beginPath();
-        //     context.font = "11px Arial";
-        //     context.fillStyle = 'white';
-        //     context.fillText(nuc, chartScale(lineIndex) - 2, TRACK_HEIGHT / 2);
-        // });
-
-
-        // // Draw Moderna
-        // canvas = this['canvas-moderna'];
-        // context = canvas.getContext('2d');
-        // // Store the current transformation matrix
-        // context.save();
-        // // Use the identity matrix while clearing the canvas
-        // context.setTransform(1, 0, 0, 1, 0, 0);
-        // context.clearRect(0, 0, canvas.width, canvas.height);
-        // // Restore the transform
-        // context.restore();
-
-        // context.lineWidth = TRACK_HEIGHT;
-
-        // _.map(moderna, (nuc, lineIndex) => {
-        //     context.beginPath();
-        //     context.moveTo(Math.round(chartScale(lineIndex)), 0);
-        //     context.lineTo(Math.round(chartScale(lineIndex)), TRACK_HEIGHT);
-
-        //     let color = COLOR_LIST[1];
-        //     if (nuc == 'G') {
-        //         color = COLOR_LIST[2];
-        //     }
-        //     else if (nuc == 'C') {
-        //         color = COLOR_LIST[3];
-        //     }
-        //     else if (nuc == 'U') {
-        //         color = COLOR_LIST[4];
-        //     }
-        //     context.strokeStyle = color;
-        //     context.stroke();
-        // });
-
-        // _.map(moderna, (nuc, lineIndex) => {
-        //     context.textAlign = "center";
-        //     context.textBaseline = "middle";
-        //     // Add label for each line
-        //     context.beginPath();
-        //     context.font = "11px Arial";
-        //     context.fillStyle = 'white';
-        //     context.fillText(nuc, chartScale(lineIndex) - 2, TRACK_HEIGHT / 2);
-        // });
-
-
-        // // Plot difference 
-        // canvas = this['canvas-diff'];
-        // context = canvas.getContext('2d');
-        // // Store the current transformation matrix
-        // context.save();
-        // // Use the identity matrix while clearing the canvas
-        // context.setTransform(1, 0, 0, 1, 0, 0);
-        // context.clearRect(0, 0, canvas.width, canvas.height);
-        // // Restore the transform
-        // context.restore();
-
-        // context.lineWidth = TRACK_HEIGHT;
-
-        // let c = 0;
-
-        // _.map(moderna, (nuc, lineIndex) => {
-        //     context.beginPath();
-        //     context.moveTo(Math.round(chartScale(lineIndex)), 0);
-        //     context.lineTo(Math.round(chartScale(lineIndex)), TRACK_HEIGHT);
-
-        //     let color;
-        //     if (moderna[lineIndex] == pfizer[lineIndex]) {
-        //         color = COLOR_LIST[0];
-        //     }
-        //     else {
-        //         c = c + 1;
-        //         color = COLOR_LIST[2];
-        //     }
-        //     context.strokeStyle = color;
-        //     context.stroke();
-        // });
-
-
-        // _.map(moderna, (nuc, lineIndex) => {
-        //     context.textAlign = "center";
-        //     context.textBaseline = "middle";
-        //     // Add label for each line
-        //     context.beginPath();
-        //     context.font = "11px Arial";
-        //     context.fillStyle = 'white';
-
-        //     if (moderna[lineIndex] != pfizer[lineIndex]) {
-        //         context.fillText(nuc, chartScale(lineIndex) - 2, TRACK_HEIGHT / 2);
-        //     }
-
-        // });
-
-
-
-        // // Plot Protein
-        // // Plot difference 
-        // canvas = this['canvas-prot'];
-        // context = canvas.getContext('2d');
-        // // Store the current transformation matrix
-        // context.save();
-        // // Use the identity matrix while clearing the canvas
-        // context.setTransform(1, 0, 0, 1, 0, 0);
-        // context.clearRect(0, 0, canvas.width, canvas.height);
-        // // Restore the transform
-        // context.restore();
-
-        // context.lineWidth = TRACK_HEIGHT;
-
-        // _.map(moderna, (nuc, lineIndex) => {
-        //     context.beginPath();
-        //     context.moveTo(Math.round(chartScale(lineIndex)), 0);
-        //     context.lineTo(Math.round(chartScale(lineIndex)), TRACK_HEIGHT);
-        //     let color = COLOR_LIST[0];;
-        //     context.strokeStyle = color;
-        //     context.stroke();
-        // });
-
+        this.setState({ sequenceMap });
     }
 
     render() {
 
+        const { sequenceMap } = this.state, width = OVERALL_WIDTH;
+
+        const sequenceWidth = width < 500 ? width : width / 2;
+
         return (
-            <div className={'dashboard-root batman'}>
+            <div className={'dashboard-root batman container-fluid'}>
 
-                {/* <SequenceMap /> */}
+                <div className='row'>
+                    <div className='col-sm-6'>
+                        {sequenceMap && sequenceMap.pfizer &&
+                            <SequenceMap
+                                sequence={sequenceMap.pfizer}
+                                seqID='pfizer'
+                                title={'Pfizer mRNA (protein encoding region)'}
+                                width={sequenceWidth} />}
+                    </div>
+                    <div className='col-sm-6'>
+                        {sequenceMap && sequenceMap.moderna &&
+                            <SequenceMap
+                                sequence={sequenceMap.moderna}
+                                seqID='moderna'
+                                title={'Moderna mRNA (protein encoding region)'}
+                                width={sequenceWidth} />}
+                    </div>
+                </div>
 
-                {/* <div className='canvas-wrapper m-a'>
-                    <h3>Pfizer mRNA Sequence</h3>
-                    <canvas className='genomemap-canvas'
-                        width={CHART_WIDTH}
-                        height={TRACK_HEIGHT}
-                        ref={(el) => { this['canvas-pfizer'] = el }} />
+                <div className='row'>
+                    <div className='col-sm-6'>
+                        {sequenceMap && sequenceMap.moderna &&
+                            <SequenceMap
+                                sequence={sequenceMap.pfizerDiff}
+                                seqID='pfizerDiff'
+                                title={'Pfizer difference from Moderna'}
+                                width={sequenceWidth} />}
+                    </div>
+                    <div className='col-sm-6'>
+                        {sequenceMap && sequenceMap.moderna &&
+                            <SequenceMap
+                                sequence={sequenceMap.modernaDiff}
+                                seqID='modernaDiff'
+                                title={'Moderna difference from Pfizer'}
+                                width={sequenceWidth} />}
+                    </div>
+                </div>
 
-                    <h3>Moderna mRNA Sequence</h3>
-                    <canvas className='genomemap-canvas'
-                        width={CHART_WIDTH}
-                        height={TRACK_HEIGHT}
-                        ref={(el) => { this['canvas-moderna'] = el }} />
-
-                    <h3>Difference Mapping mRNA</h3>
-                    <canvas className='genomemap-canvas'
-                        width={CHART_WIDTH}
-                        height={TRACK_HEIGHT}
-                        ref={(el) => { this['canvas-diff'] = el }} />
-
-
-                    <h3>Difference Mapping Protein</h3>
-                    <canvas className='genomemap-canvas m-b'
-                        width={CHART_WIDTH}
-                        height={TRACK_HEIGHT}
-                        ref={(el) => { this['canvas-prot'] = el }} /> 
-
-            </div>*/}
-
+                <div className='row'>
+                    <div className='col-sm-6'>
+                        {sequenceMap && sequenceMap.pfizerProt &&
+                            <SequenceMap
+                                sequence={sequenceMap.pfizerProt}
+                                seqID='pfizerProt'
+                                title={'Pfizer Protein'}
+                                width={sequenceWidth} />}
+                    </div>
+                    <div className='col-sm-6'>
+                        {sequenceMap && sequenceMap.modernaProt &&
+                            <SequenceMap
+                                sequence={sequenceMap.modernaProt}
+                                seqID='modernaProt'
+                                title={'Moderna Protein'}
+                                width={sequenceWidth} />}
+                    </div>
+                </div>
             </div>
         );
     }
 }
-
-function mapDispatchToProps(dispatch) {
-    return {
-        actions: bindActionCreators({}, dispatch)
-    };
-}
-
-function mapStateToProps(state) {
-    return {
-    };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 
 
 
