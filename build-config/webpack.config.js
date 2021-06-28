@@ -10,7 +10,7 @@ module.exports = {
     entry: ['babel-polyfill', './src/app.jsx'],
     output: {
         path: __dirname + '/dist/bundle',
-        filename: "hapmap.js",
+        filename: "vaccine-map.js",
         publicPath: "/bundle"
     },
     devServer: {
@@ -27,8 +27,7 @@ module.exports = {
     },
     plugins: [new webpack.DefinePlugin({
             'process.env': {
-                NODE_ENV: JSON.stringify('development'),
-                DATADIR_PATH: JSON.stringify('')
+                NODE_ENV: JSON.stringify('development')
             }
         }),
         new HtmlWebpackPlugin({

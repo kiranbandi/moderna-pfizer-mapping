@@ -4,20 +4,6 @@ module.exports = [{
         loader: 'babel-loader'
     },
     {
-        test: /\.worker\.js$/,
-        use: {
-            loader: 'workerize-loader',
-            options: { inline: true }
-        }
-    },
-    {
-        test: require.resolve('jquery'),
-        loader: 'expose-loader',
-        options: {
-            exposes: ['$', 'jQuery'],
-        },
-    },
-    {
         test: /\.jsx$/,
         exclude: /node_modules/,
         loader: 'babel-loader'
