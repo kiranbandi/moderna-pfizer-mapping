@@ -97,8 +97,9 @@ export default class Dashboard extends Component {
             <div className={'dashboard-root batman container-fluid'}>
                 <h4 className='description'>A visualization of the similairity between the spike protein encoding mRNA sequence in the Pfizer and Moderna vaccines.
                     mRNA sequences are made up of 4 nucleotides (A,G,C and U) which are translated into protein sequences.
-                    Each set of three nucleotides called a codon correspond to one amino acid. But with 64 feasible combitions(4x4x4) and only 20 possible amino acids, several combinations end up coding for the same amino acid.
-                    Thus even though the mRNA sequences differ by about 10% when encoded into amino acids they form an exactly identical protein sequence. <a className='text-info' href='https://github.com/NAalytics/Assemblies-of-putative-SARS-CoV2-spike-encoding-mRNA-sequences-for-vaccines-BNT-162b2-and-mRNA-1273'>Data source Link</a></h4>
+                    Each set of three nucleotides called a codon correspond to one amino acid. But with 64 feasible combinations(4x4x4) and only 20 possible amino acids, several combinations end up coding for the same amino acid.
+                    Thus even though the mRNA sequences differ by about 10% when encoded into amino acids they form an exactly identical protein sequence.</h4>
+                <h4 className='description'> <b>Designed and developed at the HCI lab, University of Saskatchewan.</b> <a className='text-info' href='https://github.com/NAalytics/Assemblies-of-putative-SARS-CoV2-spike-encoding-mRNA-sequences-for-vaccines-BNT-162b2-and-mRNA-1273'>Data source Link</a></h4>
                 <div className='row'>
                     <div className='col-sm-6'>
                         {sequenceMap && sequenceMap.pfizer &&
@@ -143,7 +144,7 @@ export default class Dashboard extends Component {
                             <SequenceMap
                                 sequence={sequenceMap.pfizerProt}
                                 seqID='pfizerProt'
-                                title={'Pfizer Protein'}
+                                title={'Pfizer mRNA translated into Protein'}
                                 width={sequenceWidth} />}
                     </div>
                     <div className='col-sm-6'>
@@ -151,7 +152,7 @@ export default class Dashboard extends Component {
                             <SequenceMap
                                 sequence={sequenceMap.modernaProt}
                                 seqID='modernaProt'
-                                title={'Moderna Protein'}
+                                title={'Moderna mRNA translated into Protein'}
                                 width={sequenceWidth} />}
                     </div>
                 </div>
