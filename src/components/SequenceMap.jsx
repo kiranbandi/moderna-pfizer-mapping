@@ -55,12 +55,13 @@ export default class SequenceMap extends Component {
 
     render() {
 
-        const { sequence, seqID, title, width } = this.props,
+        const { sequence, seqID, title, width, titleRight = false } = this.props,
             sequenceParts = Math.ceil((sequence.length * CHARACTER_WIDTH) / width);
 
         return (
             <div className='canvas-wrapper'>
-                <h3>{title}</h3>
+                <h4 style={{ 'width': width }}
+                    className={titleRight ? 'text-right' : 'text-left'}>{title}</h4>
                 {_.map(_.times(sequenceParts), (d, i) => {
                     return <canvas className='sequence-canvas'
                         key={'key-' + seqID + '-' + i}
