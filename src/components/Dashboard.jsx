@@ -105,7 +105,7 @@ export default class Dashboard extends Component {
         return (
             <div>
                 <div className={'dashboard-root batman container-fluid'}>
-                    <h4 className='description'>A visualization of the similairity between the spike protein encoding mRNA sequences in the Pfizer and Moderna vaccines.
+                    <h4 className='description'>A visualization of the similarity between the spike protein encoding mRNA sequences in the Pfizer and Moderna vaccines.
                         mRNA sequences are made up of 4 nucleotides (A,G,C and U) which are translated into protein sequences.
                         Each set of three nucleotides called a codon encode for one amino acid which when chained together make up a protein sequence. But with 64 feasible combinations(4x4x4, 4 nucleotides) and only 20 possible amino acids, several combinations end up coding for the same amino acid.
                         Thus even though the mRNA sequences differ by about 10% when encoded into amino acids they form an exactly identical protein sequence.</h4>
