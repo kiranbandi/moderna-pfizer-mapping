@@ -28,7 +28,7 @@ export default class ChartLegend extends Component {
         else if (this.props.type == 'Difference') {
             return (
                 <div style={{ 'marginBottom': -35, 'marginTop': 10 }} className='legend-wrapper text-center xs-d-block'>
-                    <span className='text-primary main-label'> ~10% Difference in Nucleotides between both (colored by difference)</span>
+                    <span className='text-primary main-label'> ~10% Difference in nucleotides between both (colored by difference)</span>
                     {[{ 'color': '0', 'text': 'Nucleotides Match' },
                     { 'color': '2', 'text': 'Nucleotides are Different' }]
                         .map((d) => {
@@ -44,7 +44,7 @@ export default class ChartLegend extends Component {
         else {
             return (
                 <div style={{ 'marginBottom': -35, 'marginTop': 10 }} className='legend-wrapper text-center'>
-                    <span className='text-primary main-label'> 100% identical when mRNA is translated into Protein (colored by difference)</span>
+                    <span className='text-primary main-label'> Identical sequences when mRNA is translated into Protein (colored by difference) </span>
                     {[{ 'color': '0', 'text': 'Amino acids same' },
                     { 'color': '2', 'text': 'Amino acids are different' }]
                         .map((d) => {

@@ -68,7 +68,6 @@ export default class Dashboard extends Component {
 
         });
 
-
         // Add the start and stop coding regions 
         sequenceMap.moderna = [...(modernaStartandStop[0].split('').map((d) => ({ 'color': 6, 'text': d }))), ...(sequenceMap.moderna), ...(modernaStartandStop[1].split('').map((d) => ({ 'color': 6, 'text': d })))];
         // Add the start and stop coding regions 
@@ -112,7 +111,7 @@ export default class Dashboard extends Component {
                         Thus even though the mRNA sequences differ by about 10% when encoded into amino acids they form an exactly identical protein sequence.</h4>
 
 
-                    <h3 className='banner'>Moderna and Pfizer vaccine mRNA sequences are 100% indentical when encoded into protein sequences.</h3>
+                    <h3 className='banner'>Spike protein mRNA sequences of the Pfizer and Moderna vaccines are identical when encoded into protein sequences.</h3>
                     <div className='row'>
                         <ChartLegend type='Nucleotide' />
                         <div className='col-sm-6'>
